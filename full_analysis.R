@@ -30,6 +30,7 @@ for (file in files) {
   new.df = as.data.frame(do.call(rbind, new.df), stringsAsFactors = FALSE)
   new.df[,2] = as.numeric(new.df[,2])
   names(new.df) = c("text", "score")
+  new.df = cbind(new.df, tweets[,2:3])
   full.df = rbind(full.df, new.df)
 }
 
@@ -42,6 +43,7 @@ mentions = mclapply(full.df$text, function(s) {
 }, mc.cores = 12)
 mentions = do.call(rbind, mentions)
 full.df = cbind(full.df, mentions)
+save(full.df, file = "full_data.Rdata")
 
 
 vc = sapply(candidates, function(s) {
