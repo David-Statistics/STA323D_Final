@@ -1,6 +1,7 @@
 library(parallel)
 library(tictoc)
 library(tm)
+library(tools)
 files = list.files("./Rdata")
 files = files[grep("Philly", files)]
 
@@ -52,7 +53,7 @@ mentions = mclapply(full.df$text, function(s) {
   })
 }, mc.cores = 24)
 mentions = do.call(rbind, mentions)
-candidate_names = sapply(candidates, function(c) c[1])
+candidate_names = toTitleCase(sapply(candidates, function(c) c[1]))
 colnames(mentions) = candidate_names
 full.df = cbind(full.df, mentions)
 cands = unlist(mclapply(1:nrow(full.df), function(i) {
@@ -62,9 +63,9 @@ cands = unlist(mclapply(1:nrow(full.df), function(i) {
     return(candidate_names[which(full.df[i, 6:10] == TRUE)])
   }
 }, mc.cores = 24))
-full.df$cand = factor(cands)
-full.df = full.df[full.df$cand != "None", ]
-full.df$cand = droplevels(full.df$cand)
+full.df$Candidate = factor(cands)
+full.df = full.df[full.df$Candidate != "None", ]
+full.df$Candidate = droplevels(full.df$Candidate)
 save(full.df, file = "full_data.Rdata")
 
 
