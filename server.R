@@ -14,16 +14,13 @@ shinyServer(function(input, output, session) {
 
 #Output user selection for candidate chosen
   output$text1 <- renderText({paste("You have selected", paste0(input$select_candidate, "."))})
-  # output$toptenwords<-renderText({
-  #   paste("Top Ten Relevant Words for", input$select_candidate, "are",
-  #         paste(names(head(sort(tfidf.m[,cands[[input$select_candidate]]], decreasing=T),10)), 
-  #         collapse = ", "))
-  #   })
+
 #Create word cloud
   wordcloud_rep <- repeatable(wordcloud)
   words<-reactive({
     head(sort(tfidf.m[,cands[[input$select_candidate]]], decreasing=T), 500)
   })
+  
 #Plot word cloud
   output$wordcloud <- renderPlot({
     v <- words()
@@ -31,12 +28,14 @@ shinyServer(function(input, output, session) {
                   max.words=50,
                   colors=brewer.pal(8, "Dark2"))
   })  
+  
 #Plot valence scores
   output$score<-renderPlot({
     print(ggplot(full.df, aes(x = created_at, y = score, group = cand, col = cand))
           +geom_smooth(se = F)+ ggtitle("Valence Scores for All Candidates Over Time")+xlab("Time Created")
           +ylab("Valence Score (Higher Score->Positive)"))
   })
+  
 #Plot distribution of tweets
   output$freqtweets<-renderPlot({
     print(ggplot(full.df, aes(x = created_at, col = cand)) + geom_density()
