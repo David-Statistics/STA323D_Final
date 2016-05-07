@@ -4,7 +4,7 @@
 ###Data Analysis
 
 ###Output
-Our team chose to include a shiny app to showcase the data. Users are able to view a word cloud of the frequent words tweeted by candidate. In addition, users can view a plot of valence scores (positive/negative sentiment, with 0 being neutral) over time as well as distribution of tweets over time for all candidiates.
+Our team chose to include a shiny app to showcase the data. Users are able to view a word cloud of the frequent words tweeted by candidate. In addition, users can view a plot of valence scores (positive/negative sentiment, with 0 being neutral) over time as well as distribution of tweets over time for all candidiates. The code can be found in server.R and ui.R.
 
 
 
