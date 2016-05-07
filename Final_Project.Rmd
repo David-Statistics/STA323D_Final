@@ -1,19 +1,19 @@
 ## Philadelphia Primary Election Tweets by Candidate
 ### Data Collection
 
-The data used for this project were tweets from Philadelphiain the hours following the close of polls for the PA primary on 4/26/2016. `listenPhilly.R`is the script used for collecting the data. This collects tweets for 10 minutes at a time. Using `cron`, this script was run every ten minutes on gort. This was mainly for two reasons - first if the script failed for some reason, we'd lose 10 minutes of data instead of all of it. Secondly, this kept the size of the files for the raw data to a managable size. 
+The data used for this project were tweets from Philadelphia in the hours following the close of polls for the PA primary on 4/26/2016. `listenPhilly.R`is the script used for collecting the data. This collects tweets for 10 minutes at a time. Using `cron`, this script was run every ten minutes on gort. This was mainly for two reasons - first, if the script failed for some reason, we'd lose 10 minutes of data instead of all of it. Secondly, this kept the size of the files for the raw data to a managable size. 
 
-Once those files were collected, the text, retweet count, and time created were extracted and saved in the `Rdata` folder. This was to save space as many of the full data files were over 100MB whereas most of the new data files noticably smaller than 5MB. 
+Once those files were collected, the text, retweet count, and time created were extracted and saved in the `Rdata` folder. This was to save space, as many of the full data files were over 100MB whereas most of the new data files were noticably smaller than 5MB. 
 
 ### Data Analysis
 
-Most of the analysis and cleaning takes place in `full_analysis.R`. This script pulls a list of positive and negative words ([found here](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html)) which will be used in scoring the individual tweets. The score of a tweet is simply the mean score of all the words used. One note is that "trump" was included as a positive word in this list and thus was removed as we were interested in the name "trump" and not the general word. 
+Most of the analysis and cleaning takes place in `full_analysis.R`. This script pulls a list of positive and negative words ([found here](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html)) which will be used in scoring the individual tweets. The score of a tweet is simply the mean score of all the words used. One note is that "trump" was included as a positive word in this list and thus was removed, as we were interested in the name "trump" and not the general word. 
 
-In addition to scoring the tweets, all punctuation was removed and links were also removed. Once all the files were looped over, duplicate tweets (due to retweets) were removed as given the short time frame, a couple viral tweets could unduely dominate the data set. Once that cleaning was done, the tweets were scanned for mentions of candidates/campaigns and classified as such. Finally, using these classifactions, a "document" was built for each candidate by concatenating together all the tweets mentioning that candidate. These documents were then used in Term Frequency Inverse Document Frequency (TFIDF) scoring which measures the relevance of words for each document. 
+In addition to scoring the tweets, all punctuation and links were also removed. Once all the files were looped over, duplicate tweets (due to retweets) were removed; given the short time frame, a couple viral tweets could unduely dominate the data set. Once that cleaning was done, the tweets were scanned for mentions of candidates/campaigns and classified as such. Finally, using these classifactions, a "document" was built for each candidate by concatenating together all the tweets mentioning that candidate. These documents were then used in Term Frequency Inverse Document Frequency (TFIDF) scoring, which measures the relevance of words for each document. 
 
 ### Output
 
-Our team chose to include a shiny app to showcase the data. Users are able to view a word cloud of the most frequent words tweeted by users about each respective candidate, with the size of the words in the output reflecting word frequency. Additionally, users can view a plot of valence scores (positive/negative sentiment, with 0 being neutral) over time as well as distribution of tweets over time for all candidiates. The code can be found in server.R and ui.R.
+Our team chose to include a Shiny app to showcase the data. Users are able to view a word cloud of the most frequent words tweeted by users about each respective candidate, with the size of the words in the output reflecting word frequency. Additionally, users can view a plot of valence scores (positive/negative sentiment, with 0 being neutral) over time as well as the distribution of tweets over time for all candidiates. The code can be found in server.R and ui.R.
 
 
 
