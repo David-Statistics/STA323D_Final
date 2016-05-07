@@ -20,6 +20,7 @@ for (file in files) {
     words = iconv(words, to = "utf-8", sub = "")
     words = strsplit(words, "\\s")[[1]]
     words = sapply(words, function(w) try(tolower(w)))
+    words = words[!grepl("http", words)]
     score = sum(sapply(words, function(w) {
       return(sum(named_neg[w], named_pos[w], na.rm = T))
     }))
@@ -33,20 +34,30 @@ for (file in files) {
   new.df = cbind(new.df, tweets[,2:3])
   full.df = rbind(full.df, new.df)
 }
+full.df = full.df[!duplicated(full.df$text), ]
+full.df$created_at = strptime(sapply(strsplit(full.df$created_at, "\\s"), function(x) {
+  paste(x[1:4], collapse = " ")
+  }), "%a %b %d %H:%M:%S")
+full.df$secs = as.numeric(full.df$created_at)
 
-
-candidates = c("trump", "kasich", "cruz", "hillary", "bernie")
+candidates = list(c("trump", "donald", "makeamericagreatagain"), 
+                  c("kasich"), 
+                  c("cruz", "tedcruz"),
+                  c("hillary", "imwithher", "fightingforus"), 
+                  c("bernie", "sanders", "feelthebern"))
 mentions = mclapply(full.df$text, function(s) {
   sapply(candidates, function(c) {
-    return(c %in% strsplit(s, "\\s")[[1]])
+    return(any(sapply(c, function(phrase) phrase %in% strsplit(s, "\\s")[[1]])))
   })
-}, mc.cores = 12)
+}, mc.cores = 24)
 mentions = do.call(rbind, mentions)
+candidate_names = sapply(candidates, function(c) c[1])
+colnames(mentions) = candidate_names
 full.df = cbind(full.df, mentions)
 save(full.df, file = "full_data.Rdata")
 
 
-vc = sapply(candidates, function(s) {
+vc = sapply(candidate_names, function(s) {
   inds = which(full.df[[s]])
   text = iconv(enc2utf8(paste(full.df$text[inds], collapse = " ")), to = 'UTF-8')
   iconv(text, "UTF-8", "ASCII", sub="")
