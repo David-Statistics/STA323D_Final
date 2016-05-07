@@ -1,14 +1,9 @@
----
-title: "Final_Project"
-output: html_document
----
-
 ## Philadelphia Primary Election Tweets by Candidate
-#Data Collection
+###Data Collection
 
-#Data Analysis
+###Data Analysis
 
-#Output
+###Output
 Our team chose to include a shiny app to showcase the data. Users are able to view a word cloud of the frequent words tweeted by candidate. In addition, users can view a plot of valence scores (positive/negative sentiment, with 0 being neutral) over time as well as distribution of tweets over time for all candidiates.
 
 
