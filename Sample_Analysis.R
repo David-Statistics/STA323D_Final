@@ -17,11 +17,12 @@ test_sub = mclapply(tweets$text, function(s) {
   words = iconv(words, to = "utf-8", sub = "")
   words = strsplit(words, "\\s")[[1]]
   words = sapply(words, function(w) try(tolower(w)))
+  words = words[!grepl("http", words)]
   score = sum(sapply(words, function(w) {
     return(sum(named_neg[w], named_pos[w], na.rm = T))
   }))
   c(paste(words, collapse = " "), score)
-}, mc.cores = 12)
+}, mc.cores = 24)
 toc()
 
 test_sub = as.data.frame(do.call(rbind, test_sub), stringsAsFactors = FALSE)
@@ -29,10 +30,14 @@ test_sub[,2] = as.numeric(test_sub[,2])
 names(test_sub) = c("text", "score")
 
 tic()
-candidates = c("trump", "kasich", "cruz", "hillary", "bernie")
+candidates = list(c("trump", "donald", "makeamericagreatagain"), 
+                  c("kasich"), 
+                  c("cruz", "tedcruz"),
+                  c("hillary", "imwithher", "fightingforus"), 
+                  c("bernie", "sanders", "feelthebern"))
 mentions = mclapply(test_sub$text, function(s) {
   sapply(candidates, function(c) {
-    return(c %in% strsplit(s, "\\s")[[1]])
+    return(any(sapply(c, function(phrase) phrase %in% strsplit(s, "\\s")[[1]])))
   })
 }, mc.cores = 12)
 mentions = do.call(rbind, mentions)
