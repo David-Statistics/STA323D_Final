@@ -23,7 +23,6 @@ shinyUI(fluidPage(
      mainPanel(
        #Output which candidate selected
         textOutput("text1"),
-        #textOutput("toptenwords"),
         #Output word cloud of words most tweeted by candidate
         plotOutput("wordcloud"),
         #Output valence score (positive/negative) for all candidiates
