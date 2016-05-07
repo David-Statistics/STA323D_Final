@@ -3,20 +3,17 @@ title: "Final_Project"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+## Philadelphia Primary Election Tweets by Candidate
+#Data Collection
 
-## R Markdown
+#Data Analysis
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#Output
+Our team chose to include a shiny app to showcase the data. Users are able to view a word cloud of the frequent words tweeted by candidate. In addition, users can view a plot of valence scores (positive/negative sentiment, with 0 being neutral) over time as well as distribution of tweets over time for all candidiates.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-##Shiny App 
-To add to the visualization and interactivity of the project, our group chose to include a shiny app to 
 
-```
+
+
 
 
