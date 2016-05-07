@@ -40,6 +40,7 @@ full.df$created_at = strptime(sapply(strsplit(full.df$created_at, "\\s"), functi
   }), "%a %b %d %H:%M:%S")
 full.df$secs = as.numeric(full.df$created_at)
 
+
 candidates = list(c("trump", "donald", "makeamericagreatagain"), 
                   c("kasich"), 
                   c("cruz", "tedcruz"),
@@ -54,6 +55,16 @@ mentions = do.call(rbind, mentions)
 candidate_names = sapply(candidates, function(c) c[1])
 colnames(mentions) = candidate_names
 full.df = cbind(full.df, mentions)
+cands = unlist(mclapply(1:nrow(full.df), function(i) {
+  if(sum(full.df[i, 6:10] == TRUE)>1) {return("Multiple")}
+  if(sum(full.df[i, 6:10] == TRUE)==0) {return("None")}
+  else {
+    return(candidate_names[which(full.df[i, 6:10] == TRUE)])
+  }
+}, mc.cores = 24))
+full.df$cand = factor(cands)
+full.df = full.df[full.df$cand != "None", ]
+full.df$cand = droplevels(full.df$cand)
 save(full.df, file = "full_data.Rdata")
 
 
